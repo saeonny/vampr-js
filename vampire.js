@@ -27,7 +27,7 @@ class Vampire {
     let thisVam = this;
     while (thisVam.creator) {
       thisVam = thisVam.creator;
-      count ++;
+      count++;
     }
     return count;
 
@@ -39,6 +39,60 @@ class Vampire {
     const thatLevel = vampire.numberOfVampiresFromOriginal;
 
     return thisLevel < thatLevel;
+
+  }
+
+  /** Tree traversal methods **/
+
+  // Returns the vampire object with that name, or null if no vampire exists with that name
+  vampireWithName(name) {
+    let currentVam = this;
+    let desiredVam = null;
+
+
+
+    if (currentVam.name === name) {
+      return currentVam;
+    } else {
+      for (let children of currentVam.offspring) {
+        desiredVam = children.vampireWithName(name);
+        if (desiredVam) {
+          return desiredVam;
+        }
+      }
+      return null;
+    }
+
+
+  }
+
+  // Returns the total number of vampires that exist
+  get totalDescendents() {
+    let vamNum = 0;
+
+    if (this.numberOfOffspring === 0) {
+      return 0;
+    } else {
+      for (let childVam of this.offspring) {
+        vamNum += 1;
+        vamNum += childVam.totalDescendents;
+      }
+    }
+    return vamNum;
+  }
+
+  // Returns an array of all the vampires that were converted after 1980
+  get allMillennialVampires() {
+    let vampires = [];
+    if (this.yearConverted >= 1980) {
+      vampires.push(this);
+    }
+
+    for (let vamp of this.offspring) {
+      vampires = vampires.concat(vamp.allMillennialVampires);
+    }
+
+    return vampires;
 
   }
 
@@ -59,7 +113,7 @@ class Vampire {
       return this;
     }
 
-    
+
 
 
   }
